@@ -1,6 +1,12 @@
 // Assignment code here
+var passwordCriteria = {
+  length: null,
+  lowercaseFlag: false,
+  uppercaseFlag: false,
+  numericFlag: false,
+  specialCharsFlag: false
+};
 var passwordRules = [];
-var passwordCriteria = {};
 const LOWERCASE_ID = "lowercase";
 const UPPERCASE_ID = "uppercase";
 const NUMERIC_ID = "numeric";
@@ -11,18 +17,12 @@ var generateBtn = document.querySelector("#generate");
 
 // Write password to the #password input
 function writePassword() {
-  passwordCriteria = {
-    length: getPasswordLength(),
-    lowercaseFlag: getLowercaseFlag(),
-    uppercaseFlag: getUppercaseFlag(),
-    numericFlag: getNumericFlag(),
-    specialCharsFlag: getSpecialCharsFlag(),
-  }
- 
-  console.log(passwordCriteria);
-  if(!isCriteriaValid(passwordCriteria)){
+
+  setPasswordCriteria();
+
+  while(!isCriteriaValid(passwordCriteria)){
     alert("You must select at least one character type.");
-    writePassword();
+    setPasswordCriteria();
   }
 
   buildPasswordRules(passwordCriteria);
@@ -33,10 +33,9 @@ function writePassword() {
 
 }
 
-/* Generates a random index from 0 up to the last index in passwordRules array to choose a random char type. Once the char type is selected,
+/* Generates a random index (from 0 up to the last index in passwordRules array) to choose a random char type. Once the char type is selected,
   a random character of that char type is appended to the password.*/
 function generatePassword(passwordCriteria) {
-  console.log("generating a password");
     let password = "";
     for(index = 0; index < passwordCriteria.length; index++){
         switch(passwordRules[randomNumber(0,passwordRules.length - 1)]){
@@ -58,10 +57,18 @@ function generatePassword(passwordCriteria) {
     return password;
 }
 
+// Set the password criteria based on user discretion
+function setPasswordCriteria(){
+  passwordCriteria.length = getPasswordLength();
+  passwordCriteria.lowercaseFlag = getLowercaseFlag();
+  passwordCriteria.uppercaseFlag = getUppercaseFlag();
+  passwordCriteria.numericFlag = getNumericFlag();
+  passwordCriteria.specialCharsFlag = getSpecialCharsFlag();
+}
+
+// Builds an array of char types that the user requested
 function buildPasswordRules(passwordCriteria) {
   passwordRules = [];
-  console.log("in build: ", passwordCriteria);
-
   if (passwordCriteria.lowercaseFlag) {
     passwordRules.push(LOWERCASE_ID);
   }
@@ -78,50 +85,60 @@ function buildPasswordRules(passwordCriteria) {
   }
 }
 
+// Prompts user for password length of 8 - 128 characters
 function getPasswordLength() {
   let passwordLength;
 
   while( !passwordLength || passwordLength < 8 || passwordLength > 128 ){
-    !passwordLength || alert("password must be 8 - 128 chars long");
+    !passwordLength || alert("The password must be 8 - 128 chars long.");
     passwordLength = parseInt(prompt("How many characters would you like the password to be? (range 8 - 128 chars)"));
   }
 
   return passwordLength;
 }
 
+//Prompt user to use lowercase chars
 function getLowercaseFlag() {
   return confirm("Use lowercase characters? ");
 }
 
+//Prompt user to use uppercase chars
 function getUppercaseFlag(){
   return confirm("Use uppercase characters?");
 }
 
+//Prompt user to use numerical values
 function getNumericFlag(){
   return confirm ("Use numbers?");
 }
 
+//Prompt user to use special chars
 function getSpecialCharsFlag(){
   return confirm("Use special characters?");
 }
 
+//Ensure that at least one character type has been selected
 function isCriteriaValid(passwordCriteria){
   return passwordCriteria.lowercaseFlag || passwordCriteria.uppercaseFlag 
   || passwordCriteria.numericFlag || passwordCriteria.specialCharsFlag;
 }
 
+//Random number generator
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);;
 };
 
+//Random lowercase char generator
 function getRandomLowercaseChar(){
   return String.fromCharCode(randomNumber(97, 122));
 }
 
+//Random uppercase char generator
 function getRandomUppercaseChar(){
   return String.fromCharCode(randomNumber(65, 90));
 }
 
+//Random special char generator
 function getRandomSpecialChar(){
   return String.fromCharCode(randomNumber(33,47));
 }
