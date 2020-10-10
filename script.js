@@ -76,6 +76,7 @@ function buildPasswordRules(passwordCriteria) {
   if(passwordCriteria.uppercaseFlag){
     passwordRules.push(UPPERCASE_ID);
   }
+
   if (passwordCriteria.numericFlag){
     passwordRules.push(NUMERIC_ID);
   }
@@ -142,5 +143,6 @@ function getRandomUppercaseChar(){
 function getRandomSpecialChar(){
   return String.fromCharCode(randomNumber(33,47));
 }
+
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
